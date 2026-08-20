@@ -1,0 +1,121 @@
+{
+  "nodes": [
+    {
+      "id": "velocity_1h",
+      "label": "Velocity (1h)",
+      "group": "behavioral"
+    },
+    {
+      "id": "velocity_24h",
+      "label": "Velocity (24h)",
+      "group": "behavioral"
+    },
+    {
+      "id": "amount_zscore_high",
+      "label": "Amount Anomaly",
+      "group": "financial"
+    },
+    {
+      "id": "device_anomaly",
+      "label": "Device Anomaly",
+      "group": "device"
+    },
+    {
+      "id": "email_domain_risk",
+      "label": "Email Risk",
+      "group": "identity"
+    },
+    {
+      "id": "distance_anomaly",
+      "label": "Distance Anomaly",
+      "group": "location"
+    },
+    {
+      "id": "card_addr_mismatch",
+      "label": "Card/Addr Mismatch",
+      "group": "identity"
+    },
+    {
+      "id": "product_risk",
+      "label": "Product Risk",
+      "group": "financial"
+    },
+    {
+      "id": "high_c_counter",
+      "label": "High Counter",
+      "group": "behavioral"
+    },
+    {
+      "id": "is_fraud",
+      "label": "Fraud",
+      "group": "outcome"
+    }
+  ],
+  "edges": [
+    {
+      "source": "velocity_1h",
+      "target": "is_fraud",
+      "strength": 0.62
+    },
+    {
+      "source": "velocity_24h",
+      "target": "velocity_1h",
+      "strength": 0.55
+    },
+    {
+      "source": "velocity_24h",
+      "target": "is_fraud",
+      "strength": 0.48
+    },
+    {
+      "source": "amount_zscore_high",
+      "target": "is_fraud",
+      "strength": 0.57
+    },
+    {
+      "source": "device_anomaly",
+      "target": "is_fraud",
+      "strength": 0.45
+    },
+    {
+      "source": "device_anomaly",
+      "target": "velocity_1h",
+      "strength": 0.38
+    },
+    {
+      "source": "email_domain_risk",
+      "target": "is_fraud",
+      "strength": 0.41
+    },
+    {
+      "source": "distance_anomaly",
+      "target": "is_fraud",
+      "strength": 0.39
+    },
+    {
+      "source": "distance_anomaly",
+      "target": "card_addr_mismatch",
+      "strength": 0.33
+    },
+    {
+      "source": "card_addr_mismatch",
+      "target": "is_fraud",
+      "strength": 0.36
+    },
+    {
+      "source": "product_risk",
+      "target": "is_fraud",
+      "strength": 0.44
+    },
+    {
+      "source": "high_c_counter",
+      "target": "is_fraud",
+      "strength": 0.4
+    },
+    {
+      "source": "high_c_counter",
+      "target": "velocity_24h",
+      "strength": 0.29
+    }
+  ]
+}

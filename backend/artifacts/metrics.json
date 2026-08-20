@@ -1,0 +1,199 @@
+{
+  "dataset_note": "Computed ONLY on held-out test set (30% stratified split). Never on training data.",
+  "held_out_set_size": 30000,
+  "fraud_count": 1050,
+  "legit_count": 28950,
+  "fraud_rate_pct": 3.5,
+  "class_imbalance_ratio": "1:27.6",
+  "threshold_used": 0.55,
+  "fp_cost_assumption": "$15.0 per false positive (manual review)",
+  "fn_cost_assumption": "$120.0 per false negative (missed fraud)",
+  "precision": 1.0,
+  "recall": 0.9905,
+  "f1_score": 0.9952,
+  "false_positive_rate": 0.0,
+  "roc_auc": 0.9988,
+  "confusion_matrix": {
+    "tp": 1040,
+    "fp": 0,
+    "tn": 28950,
+    "fn": 10
+  },
+  "cost_analysis": {
+    "total_false_positive_cost": 0.0,
+    "total_false_negative_cost": 1200.0,
+    "total_cost_at_threshold": 1200.0
+  },
+  "threshold_sweep": [
+    {
+      "threshold": 0.1,
+      "total_cost": 2430.0,
+      "fp": 114,
+      "fn": 6,
+      "tp": 1044,
+      "tn": 28836,
+      "precision": 0.9016,
+      "recall": 0.9943
+    },
+    {
+      "threshold": 0.15,
+      "total_cost": 1650.0,
+      "fp": 54,
+      "fn": 7,
+      "tp": 1043,
+      "tn": 28896,
+      "precision": 0.9508,
+      "recall": 0.9933
+    },
+    {
+      "threshold": 0.2,
+      "total_cost": 1650.0,
+      "fp": 54,
+      "fn": 7,
+      "tp": 1043,
+      "tn": 28896,
+      "precision": 0.9508,
+      "recall": 0.9933
+    },
+    {
+      "threshold": 0.25,
+      "total_cost": 1650.0,
+      "fp": 54,
+      "fn": 7,
+      "tp": 1043,
+      "tn": 28896,
+      "precision": 0.9508,
+      "recall": 0.9933
+    },
+    {
+      "threshold": 0.3,
+      "total_cost": 1560.0,
+      "fp": 48,
+      "fn": 7,
+      "tp": 1043,
+      "tn": 28902,
+      "precision": 0.956,
+      "recall": 0.9933
+    },
+    {
+      "threshold": 0.35,
+      "total_cost": 1560.0,
+      "fp": 48,
+      "fn": 7,
+      "tp": 1043,
+      "tn": 28902,
+      "precision": 0.956,
+      "recall": 0.9933
+    },
+    {
+      "threshold": 0.4,
+      "total_cost": 1560.0,
+      "fp": 48,
+      "fn": 7,
+      "tp": 1043,
+      "tn": 28902,
+      "precision": 0.956,
+      "recall": 0.9933
+    },
+    {
+      "threshold": 0.45,
+      "total_cost": 1560.0,
+      "fp": 48,
+      "fn": 7,
+      "tp": 1043,
+      "tn": 28902,
+      "precision": 0.956,
+      "recall": 0.9933
+    },
+    {
+      "threshold": 0.5,
+      "total_cost": 1560.0,
+      "fp": 48,
+      "fn": 7,
+      "tp": 1043,
+      "tn": 28902,
+      "precision": 0.956,
+      "recall": 0.9933
+    },
+    {
+      "threshold": 0.55,
+      "total_cost": 1200.0,
+      "fp": 0,
+      "fn": 10,
+      "tp": 1040,
+      "tn": 28950,
+      "precision": 1.0,
+      "recall": 0.9905
+    },
+    {
+      "threshold": 0.6,
+      "total_cost": 1200.0,
+      "fp": 0,
+      "fn": 10,
+      "tp": 1040,
+      "tn": 28950,
+      "precision": 1.0,
+      "recall": 0.9905
+    },
+    {
+      "threshold": 0.65,
+      "total_cost": 1200.0,
+      "fp": 0,
+      "fn": 10,
+      "tp": 1040,
+      "tn": 28950,
+      "precision": 1.0,
+      "recall": 0.9905
+    },
+    {
+      "threshold": 0.7,
+      "total_cost": 1200.0,
+      "fp": 0,
+      "fn": 10,
+      "tp": 1040,
+      "tn": 28950,
+      "precision": 1.0,
+      "recall": 0.9905
+    },
+    {
+      "threshold": 0.75,
+      "total_cost": 1200.0,
+      "fp": 0,
+      "fn": 10,
+      "tp": 1040,
+      "tn": 28950,
+      "precision": 1.0,
+      "recall": 0.9905
+    },
+    {
+      "threshold": 0.8,
+      "total_cost": 1200.0,
+      "fp": 0,
+      "fn": 10,
+      "tp": 1040,
+      "tn": 28950,
+      "precision": 1.0,
+      "recall": 0.9905
+    },
+    {
+      "threshold": 0.85,
+      "total_cost": 1200.0,
+      "fp": 0,
+      "fn": 10,
+      "tp": 1040,
+      "tn": 28950,
+      "precision": 1.0,
+      "recall": 0.9905
+    },
+    {
+      "threshold": 0.9,
+      "total_cost": 1200.0,
+      "fp": 0,
+      "fn": 10,
+      "tp": 1040,
+      "tn": 28950,
+      "precision": 1.0,
+      "recall": 0.9905
+    }
+  ]
+}
