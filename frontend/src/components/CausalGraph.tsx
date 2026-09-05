@@ -28,32 +28,55 @@ interface InspectedNode {
 export function CausalGraph({ graph, selected, loading }: Props) {
   const fgRef = useRef<ForceGraphMethods | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+  const [dimensions, setDimensions] = useState<{ width: number; height: number }>({
+    width: typeof window !== "undefined" ? window.innerWidth - 640 : 900,
+    height: typeof window !== "undefined" ? window.innerHeight - 80 : 700,
+  });
   const [inspectedNode, setInspectedNode] = useState<InspectedNode | null>(null);
 
+  // Responsive dynamic ResizeObserver so the canvas always occupies 100% of the available middle pane
   useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const updateSize = () => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
         setDimensions({
-          width: containerRef.current.offsetWidth,
-          height: containerRef.current.offsetHeight,
+          width: Math.floor(rect.width),
+          height: Math.floor(rect.height),
         });
       }
     };
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
+
+    updateSize();
+
+    const ro = new ResizeObserver(() => {
+      updateSize();
+    });
+    ro.observe(el);
+
+    window.addEventListener("resize", updateSize);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", updateSize);
+    };
   }, []);
 
+  // Configure forces and auto-fit to container
   useEffect(() => {
-    if (fgRef.current) {
-      fgRef.current.d3Force("charge")?.strength(-550);
-      fgRef.current.d3Force("link")?.distance(140);
-      setTimeout(() => {
-        fgRef.current?.zoomToFit(400, 70);
-      }, 500);
+    if (fgRef.current && graph) {
+      fgRef.current.d3Force("charge")?.strength(-500);
+      fgRef.current.d3Force("link")?.distance(130);
+      
+      const timer = setTimeout(() => {
+        fgRef.current?.zoomToFit(400, 60);
+      }, 350);
+
+      return () => clearTimeout(timer);
     }
-  }, [graph]);
+  }, [graph, dimensions]);
 
   const activeNodeSet = useMemo(() => {
     if (!selected) return new Set<string>();
@@ -106,37 +129,56 @@ export function CausalGraph({ graph, selected, loading }: Props) {
     });
   };
 
-  const handleZoomIn = () => fgRef.current?.zoom(fgRef.current.zoom() * 1.3, 300);
-  const handleZoomOut = () => fgRef.current?.zoom(fgRef.current.zoom() / 1.3, 300);
-  const handleResetView = () => fgRef.current?.zoomToFit(400, 70);
+  const handleZoomIn = () => {
+    if (fgRef.current) {
+      const currentZoom = fgRef.current.zoom();
+      fgRef.current.zoom(currentZoom * 1.3, 300);
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (fgRef.current) {
+      const currentZoom = fgRef.current.zoom();
+      fgRef.current.zoom(currentZoom / 1.3, 300);
+    }
+  };
+
+  const handleResetView = () => {
+    if (fgRef.current) {
+      fgRef.current.zoomToFit(400, 60);
+    }
+  };
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center text-slate-500 font-mono text-xs">
-        Loading causal DAG topology...
+      <div className="flex-1 flex items-center justify-center font-mono text-xs text-slate-500">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+          <span>Synthesizing PC Causal Graph...</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div ref={containerRef} className="w-full h-full relative overflow-hidden bg-[#06070a] select-none">
-      {/* Node Inspector Modal */}
+    <div ref={containerRef} className="relative w-full h-full flex-1 overflow-hidden bg-[#06070a]">
+      {/* Node Inspector Modal Overlay */}
       {inspectedNode && (
-        <div className="absolute top-16 left-4 z-30 max-w-sm glass-panel p-4 rounded-xl border border-slate-800 shadow-2xl bg-slate-950/95 font-mono text-xs">
+        <div className="absolute top-16 left-4 z-30 w-80 glass-panel rounded-xl border border-slate-700 bg-slate-950/95 shadow-2xl p-4 font-mono">
           <div className="flex items-center justify-between pb-2 border-b border-slate-800 mb-3">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full" style={{ background: CATEGORY_COLORS[inspectedNode.group] || "#06b6d4" }} />
-              <span className="font-bold text-white uppercase">{inspectedNode.label}</span>
+              <span className="text-xs font-bold text-white uppercase">{inspectedNode.label}</span>
             </div>
             <button
               onClick={() => setInspectedNode(null)}
-              className="text-slate-400 hover:text-white cursor-pointer px-1 text-sm"
+              className="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition-colors cursor-pointer"
             >
               ✕
             </button>
           </div>
 
-          <div className="space-y-2 text-slate-300">
+          <div className="space-y-3 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 uppercase block mb-0.5">Parent Causes (Upstream):</span>
               {inspectedNode.parents.length === 0 ? (
@@ -175,7 +217,7 @@ export function CausalGraph({ graph, selected, loading }: Props) {
         </div>
       )}
 
-      {/* Zoom / Navigation Controls */}
+      {/* Floating Zoom / Navigation Controls */}
       <div className="absolute bottom-6 right-6 z-20 flex flex-col gap-2">
         <button
           onClick={handleZoomIn}
@@ -193,7 +235,7 @@ export function CausalGraph({ graph, selected, loading }: Props) {
         </button>
         <button
           onClick={handleResetView}
-          title="Reset View"
+          title="Fit Graph to View"
           className="w-8 h-8 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 flex items-center justify-center shadow-lg transition-colors cursor-pointer"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -215,7 +257,7 @@ export function CausalGraph({ graph, selected, loading }: Props) {
         ))}
       </div>
 
-      {/* 2D Canvas Graph */}
+      {/* 2D Canvas Graph with Full Dimensions */}
       <ForceGraph2D
         ref={fgRef}
         width={dimensions.width}
@@ -223,7 +265,7 @@ export function CausalGraph({ graph, selected, loading }: Props) {
         graphData={graphData}
         backgroundColor="#06070a"
         nodeRelSize={6}
-        cooldownTicks={120}
+        cooldownTicks={60}
         warmupTicks={30}
         onNodeClick={handleNodeClick}
         linkDirectionalArrowLength={6}
